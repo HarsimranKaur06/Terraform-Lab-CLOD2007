@@ -20,9 +20,6 @@ jobs:
       - name: Install jq
         run: sudo apt-get update && sudo apt-get install -y jq
 
-      - name: Test Secret
-        run: echo "Test secret: ${{ secrets.TEST_SECRET }}"
-
       - name: Authenticate to GCP
         run: |
           jq -r . <<< "${{ secrets.GOOGLE_CREDENTIALS }}" > $HOME/credentials.json
@@ -60,9 +57,6 @@ jobs:
 
       - name: Install jq
         run: sudo apt-get update && sudo apt-get install -y jq
-
-      - name: Test Secret
-        run: echo "Test secret: ${{ secrets.TEST_SECRET }}"
 
       - name: Authenticate to GCP
         run: |
