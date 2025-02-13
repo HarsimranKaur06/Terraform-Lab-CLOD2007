@@ -32,10 +32,16 @@ locals {
   service_account_email = data.terraform_remote_state.step2.outputs.service_account_email
 }
 
-# Create KMS Key Ring & Crypto Key
+# Create KMS Key Ring & Crypto Key with lifecycle ignore to prevent conflicts
 resource "google_kms_key_ring" "example" {
   name     = "lab-keyring-dev-001"
   location = "us-east1"
+
+  lifecycle {
+    ignore_changes = [
+      name,  # Ignore changes to name if already exists
+    ]
+  }
 }
 
 resource "google_kms_crypto_key" "example" {
@@ -73,5 +79,15 @@ resource "google_project_iam_binding" "storage_admin" {
 
   members = [
     "user:harsimrankaur06@gmail.com"
+  ]
+}
+
+# Ensure IAM permission for the service account
+resource "google_project_iam_binding" "iam_permissions" {
+  project = "lab1-clod2007"
+  role    = "roles/iam.securityAdmin"
+
+  members = [
+    "serviceAccount:${local.service_account_email}"
   ]
 }
