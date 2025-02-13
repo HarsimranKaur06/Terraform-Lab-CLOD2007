@@ -17,9 +17,12 @@ jobs:
         uses: hashicorp/setup-terraform@v1
 
       - name: Authenticate to GCP
-        run: echo '${{ secrets.GOOGLE_CREDENTIALS }}' > credentials.json
+        run: |
+          echo '${{ secrets.GOOGLE_CREDENTIALS }}' > credentials.json
+          echo "GOOGLE_APPLICATION_CREDENTIALS=$PWD/credentials.json" >> $GITHUB_ENV  # Persist for later steps
         env:
           GOOGLE_CREDENTIALS: ${{ secrets.GOOGLE_CREDENTIALS }}
+
 
       - name: Terraform Init (Step 2)
         run: terraform init
@@ -70,3 +73,8 @@ jobs:
         if: failure()  # Run only if the job fails
         run: terraform destroy -auto-approve
         working-directory: ./step3
+        
+        
+      - name: Cleanup Credentials
+        if: always()  # Runs even if previous steps fail
+        run: rm -f credentials.json

@@ -1,7 +1,8 @@
 # Provider Configuration
 provider "google" {
-  project = "lab1-clod2007"  # Your GCP project ID
-  region  = "us-east1"       # Your preferred region
+  credentials = file("credentials.json")  # Explicitly use the credentials file
+  project     = "lab1-clod2007"  # Your GCP project ID
+  region      = "us-east1"       # Your preferred region
 }
 
 # Create a VPC Network
