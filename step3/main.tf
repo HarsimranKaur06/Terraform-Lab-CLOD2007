@@ -18,7 +18,7 @@ locals {
   service_account_email = data.terraform_remote_state.step2.outputs.service_account_email
 }
 
-# Create GCS Bucket for Terraform state if not exists
+# Create GCS Bucket
 resource "google_storage_bucket" "terraform_state" {
   name     = "lab-tfstate-dev-001"
   location = "US"
@@ -30,16 +30,11 @@ resource "google_storage_bucket" "terraform_state" {
   encryption {
     default_kms_key_name = google_kms_crypto_key.example.id
   }
-
-  # Ensure the bucket is created if not present
-  lifecycle {
-    prevent_destroy = true
-  }
 }
 
-# Create KMS Key Ring & Crypto Key for encryption
-resource "google_kms_key_ring" " "exampleexample" {
-  name     = "lab"-keyring-dev-001"
+# Create KMS Key Ring & Crypto Key
+resource "google_kms_key_ring" "example" {
+  name     = "lab-keyring-dev-001"
   location = "us-east1"
 }
 
@@ -53,7 +48,16 @@ resource "google_kms_crypto_key" "example" {
   }
 }
 
-# IAM Bindings for Service Account
+# IAM Bindings
+resource "google_project_iam_binding" "example" {
+  project = "lab1-clod2007"
+  role    = "roles/compute.instanceAdmin"
+
+  members = [
+    "user:harsimrankaur06@gmail.com"
+  ]
+}
+
 resource "google_project_iam_binding" "service_account" {
   project = "lab1-clod2007"
   role    = "roles/compute.admin"
