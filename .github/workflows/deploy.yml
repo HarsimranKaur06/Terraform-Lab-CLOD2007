@@ -22,7 +22,7 @@ jobs:
 
       - name: Authenticate to GCP
         run: |
-          jq -r . <<< "${{ secrets.GOOGLE_CREDENTIALS }}" > $HOME/credentials.json
+          echo "${{ secrets.GOOGLE_CREDENTIALS }}" | jq -r . > $HOME/credentials.json
           echo "GOOGLE_APPLICATION_CREDENTIALS=$HOME/credentials.json" >> $GITHUB_ENV
         env:
           GOOGLE_APPLICATION_CREDENTIALS: $HOME/credentials.json
@@ -60,7 +60,7 @@ jobs:
 
       - name: Authenticate to GCP
         run: |
-          jq -r . <<< "${{ secrets.GOOGLE_CREDENTIALS }}" > $HOME/credentials.json
+          echo "${{ secrets.GOOGLE_CREDENTIALS }}" | jq -r . > $HOME/credentials.json
           echo "GOOGLE_APPLICATION_CREDENTIALS=$HOME/credentials.json" >> $GITHUB_ENV
         env:
           GOOGLE_APPLICATION_CREDENTIALS: $HOME/credentials.json
