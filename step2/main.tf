@@ -76,13 +76,3 @@ resource "google_service_account" "example" {
 output "service_account_email" {
   value = google_service_account.example.email
 }
-
-# Create IAM Bindings to allow IAM modification
-resource "google_project_iam_binding" "admin_permissions" {
-  project = "lab1-clod2007"
-  role    = "roles/iam.securityAdmin"
-
-  members = [
-    "user:harsimrankaur06@gmail.com"
-  ]
-}

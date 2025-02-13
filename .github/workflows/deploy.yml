@@ -34,7 +34,8 @@ jobs:
         id: check_plan_step2
         run: |
           terraform plan -out=tfplan
-          echo "exit_code=0" >> $GITHUB_ENV  # Save the exit code to an environment file
+          exit_code=$?
+          echo "exit_code=$exit_code" >> $GITHUB_ENV
         working-directory: ./step2
 
       - name: Terraform Apply (Step 2)
@@ -75,7 +76,8 @@ jobs:
         id: check_plan_step3
         run: |
           terraform plan -out=tfplan
-          echo "exit_code=0" >> $GITHUB_ENV
+          exit_code=$?
+          echo "exit_code=$exit_code" >> $GITHUB_ENV
         working-directory: ./step3
 
       - name: Terraform Apply (Step 3)
