@@ -19,6 +19,13 @@ jobs:
 
       - name: Install jq
         run: sudo apt-get update && sudo apt-get install -y jq
+        
+      - name: Authenticate to GCP (Test)
+        run: |
+          echo '{ "test": "hello" }' > $HOME/credentials.json  # Test JSON
+          echo "GOOGLE_APPLICATION_CREDENTIALS=$HOME/credentials.json" >> $GITHUB_ENV
+        env:
+           GOOGLE_APPLICATION_CREDENTIALS: $HOME/credentials.json
 
       - name: Authenticate to GCP
         run: |
