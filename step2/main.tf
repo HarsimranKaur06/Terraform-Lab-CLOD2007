@@ -1,13 +1,7 @@
 provider "google" {
   project     = "lab1-clod2007"
   region      = "us-east1"
-  credentials = file("/home/runner/credentials.json")
-}
-
-# SSH Key Variable
-variable "ssh_public_key" {
-  type      = string
-  sensitive = true
+  credentials = file("/home/runner/credentials.json")  # Corrected path
 }
 
 # Create a VPC Network
@@ -74,4 +68,10 @@ resource "google_service_account" "example" {
 # Output Service Account Email
 output "service_account_email" {
   value = google_service_account.example.email
+}
+
+# SSH Key Variable
+variable "ssh_public_key" {
+  type      = string
+  sensitive = true
 }
