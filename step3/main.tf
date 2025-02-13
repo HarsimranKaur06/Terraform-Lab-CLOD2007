@@ -1,13 +1,7 @@
 provider "google" {
   project     = "lab1-clod2007"
   region      = "us-east1"
-  credentials = var.google_credentials  # Use a Terraform variable
-}
-
-variable "google_credentials" {
-  type      = string
-  sensitive = true
-  default   = ""  # This will be set via GitHub Actions
+  credentials = file("credentials.json")  # Read from local file
 }
 
 # Fetch the Service Account Email from Step 2

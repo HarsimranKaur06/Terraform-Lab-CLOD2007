@@ -12,16 +12,19 @@ jobs:
     steps:
       - name: Checkout repo
         uses: actions/checkout@v3
-
-      - name: Set up Terraform
-        uses: hashicorp/setup-terraform@v1
+        
+      - name: Debug Secrets
+        run: echo "Secret Length: $(echo -n '${{ secrets[env.GOOGLE_CREDENTIALS] }}' | wc -c)"
 
       - name: Authenticate to GCP
         run: |
-          echo '${{ secrets.GOOGLE_CREDENTIALS }}' > $HOME/credentials.json
-          echo "GOOGLE_APPLICATION_CREDENTIALS=$HOME/credentials.json" >> $GITHUB_ENV  # Persist for later steps
+          echo '${{ secrets[env.GOOGLE_CREDENTIALS] }}' > $HOME/credentials.json
+          echo "GOOGLE_APPLICATION_CREDENTIALS=$HOME/credentials.json" >> $GITHUB_ENV 
         env:
-          GOOGLE_CREDENTIALS: ${{ secrets.GOOGLE_CREDENTIALS }}
+          GOOGLE_CREDENTIALS:=${{ secrets[env.GOOGLE_CREDENTIALS] }}
+
+      - name: Set up Terraform
+        uses: hashicorp/setup-terraform@v1
 
       - name: Terraform Init (Step 2)
         run: terraform init
@@ -47,32 +50,35 @@ jobs:
     steps:
       - name: Checkout repo
         uses: actions/checkout@v3
-
-      - name: Set up Terraform
-        uses: hashicorp/setup-terraform@v1
+        
+      - name: Debug Secrets
+        run: echo "Secret Length: $(echo -n '${{ secrets[env.GOOGLE_CREDENTIALS] }}' | wc -c)"
 
       - name: Authenticate to GCP
         run: |
-          echo '${{ secrets.GOOGLE_CREDENTIALS }}' > $HOME/credentials.json
-          echo "GOOGLE_APPLICATION_CREDENTIALS=$HOME/credentials.json" >> $GITHUB_ENV
+          echo '${{ secrets[env.GOOGLE_CREDENTIALS] }}' > $HOME/credentials.json
+          echo "GOOGLE_APPLICATION_CREDENTIALS=$HOME/credentials.json" >> $GITHUB_ENV 
         env:
-          GOOGLE_CREDENTIALS: ${{ secrets.GOOGLE_CREDENTIALS }}
+          GOOGLE_CREDENTIALS:=${{ secrets[env.GOOGLE_CREDENTIALS] }}
+
+      - name: Set up Terraform
+        uses: hashicorp/setup-terraform@v1
 
       - name: Terraform Init (Step 3)
         run: terraform init
         working-directory: ./step3
 
       - name: Terraform Plan (Step 3)
-        run: terraform plan -out=tfplan
+        run: terraform plan -out=tfplan -var="ssh_public_key=${{ secrets.SSH_PUBLIC_KEY }}"
         working-directory: ./step3
 
       - name: Terraform Apply (Step 3)
-        run: terraform apply -auto-approve
+        run: terraform apply -auto-approve -var="ssh_public_key=${{ secrets.SSH_PUBLIC_KEY }}"
         working-directory: ./step3
 
       - name: Terraform Destroy (Step 3)
         if: failure()  # Run only if the job fails
-        run: terraform destroy -auto-approve
+        run: terraform destroy -auto-approve -var="ssh_public_key=${{ secrets.SSH_PUBLIC_KEY }}"
         working-directory: ./step3
 
   cleanup:
@@ -80,6 +86,6 @@ jobs:
     needs: [step2, step3]  # Ensure cleanup runs AFTER both steps finish
 
     steps:
-      - name: Cleanup Credentials
+      - name: Securely Cleanup Credentials
         if: always()  # Runs even if previous steps fail
-        run: rm -f $HOME/credentials.json
+        run: shred -u $HOME/credentials.json
