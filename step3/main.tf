@@ -4,12 +4,6 @@ provider "google" {
   credentials = file("/home/runner/credentials.json")
 }
 
-# Declare the SSH Public Key variable
-variable "ssh_public_key" {
-  type        = string
-  description = "SSH Public Key for VM access"
-}
-
 # Fetch Terraform Remote State from Step 2
 data "terraform_remote_state" "step2" {
   backend = "gcs"
