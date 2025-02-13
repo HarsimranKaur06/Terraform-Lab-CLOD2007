@@ -13,12 +13,7 @@ data "terraform_remote_state" "step2" {
   }
 }
 
-# Use Service Account from Step 2
-locals {
-  service_account_email = data.terraform_remote_state.step2.outputs.service_account_email
-}
-
-# Create GCS Bucket
+# Create GCS Bucket if not exists
 resource "google_storage_bucket" "terraform_state" {
   name     = "lab-tfstate-dev-001"
   location = "US"
@@ -30,6 +25,11 @@ resource "google_storage_bucket" "terraform_state" {
   encryption {
     default_kms_key_name = google_kms_crypto_key.example.id
   }
+}
+
+# Use Service Account from Step 2
+locals {
+  service_account_email = data.terraform_remote_state.step2.outputs.service_account_email
 }
 
 # Create KMS Key Ring & Crypto Key
