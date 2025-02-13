@@ -34,14 +34,13 @@ locals {
 
 # Create KMS Key Ring & Crypto Key
 resource "google_kms_key_ring" "example" {
-  count    = length([for keyring in google_kms_key_ring.example : keyring.name == "lab-keyring-dev-001" ? 1 : 0])
   name     = "lab-keyring-dev-001"
   location = "us-east1"
 }
 
 resource "google_kms_crypto_key" "example" {
   name            = "lab-cryptokey-dev-001"
-  key_ring        = google_kms_key_ring.example[0].id
+  key_ring        = google_kms_key_ring.example.id
   rotation_period = "100000s"
 
   version_template {
