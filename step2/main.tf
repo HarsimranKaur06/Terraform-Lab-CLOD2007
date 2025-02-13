@@ -1,8 +1,13 @@
-# Provider Configuration
 provider "google" {
-  credentials = file("credentials.json")  # Explicitly use the credentials file
-  project     = "lab1-clod2007"  # Your GCP project ID
-  region      = "us-east1"       # Your preferred region
+  project     = "lab1-clod2007"
+  region      = "us-east1"
+  credentials = var.google_credentials  # Use a Terraform variable
+}
+
+variable "google_credentials" {
+  type      = string
+  sensitive = true
+  default   = ""  # This will be set via GitHub Actions
 }
 
 # Create a VPC Network
