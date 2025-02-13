@@ -15,7 +15,7 @@ jobs:
 
       - name: Set up Terraform
         uses: hashicorp/setup-terraform@v1
-        
+
       - name: Decode Google Credentials
         run: |
           echo "${{ secrets.GOOGLE_CREDENTIALS_B64 }}" | base64 -d > $HOME/credentials.json

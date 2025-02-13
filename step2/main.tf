@@ -1,3 +1,10 @@
+terraform {
+  backend "gcs" {
+    bucket = "lab-tfstate-dev-001"
+    prefix = "terraform/state/step2"
+  }
+}
+
 provider "google" {
   project     = "lab1-clod2007"
   region      = "us-east1"
