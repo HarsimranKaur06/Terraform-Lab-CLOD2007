@@ -28,14 +28,14 @@ jobs:
       - name: Terraform Plan (Step 2)
         id: check_plan_step2
         run: |
-          terraform plan -out=tfplan -var="ssh_public_key=${{ secrets.SSH_PUBLIC_KEY }}"
+          terraform plan -out=tfplan
           exit_code=$?
           echo "exit_code=$exit_code" >> $GITHUB_ENV
         working-directory: ./step2
 
       - name: Terraform Apply (Step 2)
         if: ${{ env.exit_code == '2' }}
-        run: terraform apply -auto-approve -var="ssh_public_key=${{ secrets.SSH_PUBLIC_KEY }}"
+        run: terraform apply -auto-approve
         working-directory: ./step2
 
       - name: Terraform Skip Apply (Step 2)
@@ -45,7 +45,7 @@ jobs:
 
       - name: Terraform Destroy (Step 2)
         if: failure()
-        run: terraform destroy -auto-approve -var="ssh_public_key=${{ secrets.SSH_PUBLIC_KEY }}"
+        run: terraform destroy -auto-approve
         working-directory: ./step2
 
   step3:
@@ -71,14 +71,14 @@ jobs:
       - name: Terraform Plan (Step 3)
         id: check_plan_step3
         run: |
-          terraform plan -out=tfplan -var="ssh_public_key=${{ secrets.SSH_PUBLIC_KEY }}"
+          terraform plan -out=tfplan
           exit_code=$?
           echo "exit_code=$exit_code" >> $GITHUB_ENV
         working-directory: ./step3
 
       - name: Terraform Apply (Step 3)
         if: ${{ env.exit_code == '2' }}
-        run: terraform apply -auto-approve -var="ssh_public_key=${{ secrets.SSH_PUBLIC_KEY }}"
+        run: terraform apply -auto-approve
         working-directory: ./step3
 
       - name: Terraform Skip Apply (Step 3)
@@ -88,7 +88,7 @@ jobs:
 
       - name: Terraform Destroy (Step 3)
         if: failure()
-        run: terraform destroy -auto-approve -var="ssh_public_key=${{ secrets.SSH_PUBLIC_KEY }}"
+        run: terraform destroy -auto-approve
         working-directory: ./step3
 
   cleanup:

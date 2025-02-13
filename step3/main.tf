@@ -18,7 +18,7 @@ locals {
   service_account_email = data.terraform_remote_state.step2.outputs.service_account_email
 }
 
-# Create GCS Bucket
+# Ensure GCS Bucket for Terraform State exists
 resource "google_storage_bucket" "terraform_state" {
   name     = "lab-tfstate-dev-001"
   location = "US"
