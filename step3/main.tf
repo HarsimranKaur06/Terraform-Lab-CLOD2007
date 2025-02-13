@@ -4,6 +4,33 @@ provider "google" {
   credentials = file("/home/runner/credentials.json")
 }
 
+# SSH Key Variable
+variable "ssh_public_key" {
+  type      = string
+  sensitive = true
+}
+
+# Create a VPC Network
+resource "google_compute_network" "example" {
+  name                    = "lab-vpc-dev-001"
+  auto_create_subnetworks = false
+}
+
+# Create a Subnet
+resource "google_compute_subnetwork" "example" {
+  name          = "lab-subnet-dev-001"
+  ip_cidr_range = "10.0.1.0/24"
+  region        = "us-east1"
+  network       = google_compute_network.example.id
+}
+
+# Deploy an Ubun
+"google" {
+  project     = "lab1-clod2007"
+  region      = "us-east1"
+  credentials = file("/home/runner/credentials.json")
+}
+
 # Fetch Terraform Remote State from Step 2
 data "terraform_remote_state" "step2" {
   backend = "gcs"

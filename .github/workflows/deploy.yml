@@ -31,16 +31,15 @@ jobs:
           terraform plan -out=tfplan -var="ssh_public_key=${{ secrets.SSH_PUBLIC_KEY }}"
           exit_code=$?
           echo "exit_code=$exit_code" >> $GITHUB_ENV
-          echo "::set-output name=plan_exit_code::$exit_code"
         working-directory: ./step2
 
       - name: Terraform Apply (Step 2)
-        if: ${{ steps.check_plan_step2.outputs.plan_exit_code == '2' }}
+        if: ${{ env.exit_code == '2' }}
         run: terraform apply -auto-approve -var="ssh_public_key=${{ secrets.SSH_PUBLIC_KEY }}"
         working-directory: ./step2
 
       - name: Terraform Skip Apply (Step 2)
-        if: ${{ steps.check_plan_step2.outputs.plan_exit_code == '0' }}
+        if: ${{ env.exit_code == '0' }}
         run: echo "Resources already exist, skipping apply."
         working-directory: ./step2
 
@@ -75,16 +74,15 @@ jobs:
           terraform plan -out=tfplan -var="ssh_public_key=${{ secrets.SSH_PUBLIC_KEY }}"
           exit_code=$?
           echo "exit_code=$exit_code" >> $GITHUB_ENV
-          echo "::set-output name=plan_exit_code::$exit_code"
         working-directory: ./step3
 
       - name: Terraform Apply (Step 3)
-        if: ${{ steps.check_plan_step3.outputs.plan_exit_code == '2' }}
+        if: ${{ env.exit_code == '2' }}
         run: terraform apply -auto-approve -var="ssh_public_key=${{ secrets.SSH_PUBLIC_KEY }}"
         working-directory: ./step3
 
       - name: Terraform Skip Apply (Step 3)
-        if: ${{ steps.check_plan_step3.outputs.plan_exit_code == '0' }}
+        if: ${{ env.exit_code == '0' }}
         run: echo "Resources already exist, skipping apply."
         working-directory: ./step3
 
