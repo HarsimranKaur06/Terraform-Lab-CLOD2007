@@ -76,3 +76,13 @@ resource "google_service_account" "example" {
 output "service_account_email" {
   value = google_service_account.example.email
 }
+
+# Add IAM Permissions for Terraform Service Account
+resource "google_project_iam_binding" "iam_permissions" {
+  project = "lab1-clod2007"
+  role    = "roles/iam.securityAdmin"
+
+  members = [
+    "serviceAccount:${google_service_account.example.email}"
+  ]
+}
