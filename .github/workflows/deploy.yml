@@ -35,13 +35,13 @@ jobs:
         working-directory: ./step2
 
       - name: Terraform Destroy (Step 2)
-        if: failure()  # Run only if the job fails
+        if: failure()
         run: terraform destroy -auto-approve -var="ssh_public_key=${{ secrets.SSH_PUBLIC_KEY }}"
         working-directory: ./step2
 
   step3:
     runs-on: ubuntu-latest
-    needs: step2  # Ensure Step 2 runs before Step 3
+    needs: step2  
 
     steps:
       - name: Checkout repo
@@ -68,15 +68,15 @@ jobs:
         working-directory: ./step3
 
       - name: Terraform Destroy (Step 3)
-        if: failure()  # Run only if the job fails
+        if: failure()
         run: terraform destroy -auto-approve -var="ssh_public_key=${{ secrets.SSH_PUBLIC_KEY }}"
         working-directory: ./step3
 
   cleanup:
     runs-on: ubuntu-latest
-    needs: [step2, step3]  # Ensure cleanup runs AFTER both steps finish
+    needs: [step2, step3]  
 
     steps:
       - name: Securely Cleanup Credentials
-        if: always()  # Runs even if previous steps fail
+        if: always()
         run: shred -u $HOME/credentials.json
